@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Zap, Activity } from 'lucide-react';
 
 export default function Home() {
   const [signals, setSignals] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [selectedSymbol, setSelectedSymbol] = useState('SOL-USD');
 
   const fetchSignals = async () => {
@@ -16,8 +14,6 @@ export default function Home() {
       }
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -29,6 +25,13 @@ export default function Home() {
 
   const activeAsset = signals.find(s => s.symbol === selectedSymbol) || signals[0];
 
+  const getTvSymbol = (sym) => {
+    if (!sym) return 'BINANCE:SOLUSDT';
+    if (sym === '^NSEI') return 'NSE:NIFTY';
+    if (sym === '^NSEBANK') return 'NSE:BANKNIFTY';
+    return 'BINANCE:' + sym.replace('-USD', 'USDT');
+  };
+
   return (
     <div style={{ backgroundColor: '#030712', color: '#f9fafb', minHeight: '100vh', fontFamily: 'sans-serif' }}>
       <Head>
@@ -36,14 +39,13 @@ export default function Home() {
       </Head>
 
       <header style={{ borderBottom: '1px solid #1f2937', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0b0f19' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Zap size={28} color="#38bdf8" />
+        <div>
           <h1 style={{ fontSize: '20px', fontWeight: '800', margin: 0, color: '#38bdf8' }}>
-            JIO AI-TRADING <span style={{ color: '#fff', fontSize: '14px', border: '1px solid #38bdf8', padding: '2px 8px', borderRadius: '12px' }}>INSTITUTIONAL V2</span>
+            ⚡ JIO AI-TRADING <span style={{ color: '#fff', fontSize: '14px', border: '1px solid #38bdf8', padding: '2px 8px', borderRadius: '12px' }}>INSTITUTIONAL V2</span>
           </h1>
         </div>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center', fontSize: '14px', color: '#9ca3af' }}>
-          <span><Activity size={16} color="#22c55e" style={{ verticalAlign: 'middle' }} /> Scanner: Active 24/7</span>
+        <div style={{ fontSize: '14px', color: '#9ca3af' }}>
+          <span>🟢 Scanner: Active 24/7 | </span>
           <span style={{ color: '#bae6fd', fontWeight: 'bold' }}>Dev: Yogendra Kumar</span>
         </div>
       </header>
@@ -72,7 +74,7 @@ export default function Home() {
         <div style={{ background: '#0b0f19', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', minHeight: '550px' }}>
           <h2 style={{ fontSize: '18px', marginBottom: '16px', color: '#38bdf8' }}>📊 Real-Time Technical Chart: {activeAsset ? activeAsset.asset : 'Loading...'}</h2>
           <iframe
-            src={https://s.tradingview.com/widgetembed/?frameElementId=tradingview_1&symbol=${selectedSymbol === '^NSEI' ? 'NSE:NIFTY' : selectedSymbol.replace('-USD', 'USD')}&interval=5&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC}
+            src={'https://s.tradingview.com/widgetembed/?frameElementId=tradingview_1&symbol=' + getTvSymbol(selectedSymbol) + '&interval=5&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC'}
             style={{ width: '100%', height: '500px', border: 'none', borderRadius: '8px' }}
           ></iframe>
         </div>
@@ -103,7 +105,7 @@ export default function Home() {
                 <div style={{ marginTop: '16px', background: '#111827', padding: '12px', borderRadius: '8px' }}>
                   <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>RSI (14) Momentum: {activeAsset.rsi}</div>
                   <div style={{ width: '100%', height: '8px', background: '#374151', borderRadius: '4px', overflow: 'hidden' }}>
-                    <div style={{ width: ${activeAsset.rsi}%, height: '100%', background: activeAsset.rsi > 68 ? '#ef4444' : activeAsset.rsi < 32 ? '#22c55e' : '#38bdf8' }}></div>
+                    <div style={{ width: activeAsset.rsi + '%', height: '100%', background: activeAsset.rsi > 68 ? '#ef4444' : activeAsset.rsi < 32 ? '#22c55e' : '#38bdf8' }}></div>
                   </div>
                 </div>
               </div>
