@@ -9,6 +9,7 @@ export default function Home() {
     try {
       const res = await fetch('https://yogiaitrading-web.onrender.com/api/signals');
       const data = await res.json();
+      
       if (Array.isArray(data) && data.length > 0) {
         setSignals(data);
       } else if (data && Array.isArray(data.signals)) {
@@ -25,8 +26,13 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  const getChartSymbol = (sym) => {
+    if (!sym) return 'SOLUSDT';
+    return sym.replace('-USD', 'USDT').replace('^', '');
+  };
+
   return (
-    <div style={{ backgroundColor: '#0f172a', color: '#ffffff', minHeight: '100vh', padding: '20px', fontFamily: 'sans-serif' }}>
+    <div className="min-h-screen bg-slate-900 text-white p-5 font-sans" style={{ backgroundColor: '#0f172a', color: '#ffffff', minHeight: '100vh', padding: '20px' }}>
       <Head>
         <title>JIO AI TRADING | INSTITUTIONAL V2</title>
       </Head>
@@ -45,10 +51,16 @@ export default function Home() {
           <h2 style={{ fontSize: '18px', marginBottom: '15px', color: '#cbd5e1' }}>
             📊 Live Technical Chart ({selectedSymbol})
           </h2>
-          <iframe
-            src={https://s.tradingview.com/widgetembed/?frameElementId=tradingview_1&symbol=${selectedSymbol.replace('-USD', 'USDT')}&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC}
-            style={{ width: '100%', height: '500px', border: 'none', borderRadius: '8px' }}
-          ></iframe>
+          <div style={{ width: '100%', height: '500px' }}>
+            <iframe
+              title="TradingView Chart"
+              src={https://s.tradingview.com/widgetembed/?frameElementId=tradingview_1&symbol=${getChartSymbol(selectedSymbol)}&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC}
+              width="100%"
+              height="500"
+              frameBorder="0"
+              style={{ border: 'none', borderRadius: '8px' }}
+            ></iframe>
+          </div>
         </section>
 
         <section style={{ backgroundColor: '#1e293b', borderRadius: '10px', padding: '15px' }}>
