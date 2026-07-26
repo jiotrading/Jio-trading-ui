@@ -5,31 +5,27 @@ export default function Home() {
   const [signals, setSignals] = useState([]);
   const [selectedSymbol, setSelectedSymbol] = useState('SOL-USD');
 
-  const fetchSignals = async () => {
-    try {
-      const res = await fetch('https://yogiaitrading-web.onrender.com/api/signals');
-      const data = await res.json();
-      
-      if (Array.isArray(data) && data.length > 0) {
-        setSignals(data);
-      } else if (data && Array.isArray(data.signals)) {
-        setSignals(data.signals);
-      }
-    } catch (err) {
-      console.error("Error fetching signals:", err);
-    }
-  };
-
   useEffect(() => {
+    const fetchSignals = async () => {
+      try {
+        const res = await fetch('https://yogiaitrading-web.onrender.com/api/signals');
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setSignals(data);
+        } else if (data && Array.isArray(data.signals)) {
+          setSignals(data.signals);
+        }
+      } catch (err) {
+        console.error("Error fetching signals:", err);
+      }
+    };
+
     fetchSignals();
     const interval = setInterval(fetchSignals, 15000);
     return () => clearInterval(interval);
   }, []);
 
-  const formatSymbol = (sym) => {
-    if (!sym) return 'SOLUSDT';
-    return sym.replace('-USD', 'USDT').replace('^', '');
-  };
+  const chartSymbol = selectedSymbol ? selectedSymbol.replace('-USD', 'USDT').replace('^', '') : 'SOLUSDT';
 
   return (
     <div style={{ backgroundColor: '#0f172a', color: '#ffffff', minHeight: '100vh', padding: '20px', fontFamily: 'sans-serif' }}>
@@ -54,11 +50,10 @@ export default function Home() {
           <div style={{ width: '100%', height: '500px' }}>
             <iframe
               title="TradingView Chart"
-              src={https://s.tradingview.com/widgetembed/?frameElementId=tradingview_1&symbol=${formatSymbol(selectedSymbol)}&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC}
+              src={"https://s.tradingview.com/widgetembed/?frameElementId=tradingview_1&symbol=" + chartSymbol + "&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC"}
               width="100%"
               height="500"
               frameBorder="0"
-              style={{ border: 'none', borderRadius: '8px' }}
             ></iframe>
           </div>
         </section>
