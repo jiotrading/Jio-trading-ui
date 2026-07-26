@@ -52,7 +52,7 @@ export default function Home() {
               title="TradingView Chart"
               src={"https://s.tradingview.com/widgetembed/?frameElementId=tradingview_1&symbol=" + chartSymbol + "&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC"}
               width="100%"
-              height="500"
+              height="520"
               frameBorder="0"
             ></iframe>
           </div>
@@ -66,44 +66,63 @@ export default function Home() {
           {signals.length === 0 ? (
             <p style={{ color: '#94a3b8' }}>Loading live signals...</p>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '500px', overflowY: 'auto' }}>
-              {signals.map((item, index) => (
-                <div
-                  key={index}
-                  onClick={() => setSelectedSymbol(item.symbol)}
-                  style={{
-                    backgroundColor: selectedSymbol === item.symbol ? '#334155' : '#0f172a',
-                    padding: '12px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    border: '1px solid #334155',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}
-                >
-                  <div>
-                    <h3 style={{ margin: '0 0 5px 0', fontSize: '16px', color: '#f8fafc' }}>{item.symbol}</h3>
-                    <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>
-                      Price: ${item.price} | RSI: {item.rsi}
-                    </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '520px', overflowY: 'auto' }}>
+              {signals.map((item, index) => {
+                // If API doesn't send TP/SL yet, calculate auto estimates for display
+                const entry = item.entry || item.price;
+                const sl = item.sl || (item.signal === 'BUY' ? (entry * 0.985).toFixed(2) : item.signal === 'SELL' ? (entry * 1.015).toFixed(2) : '-');
+                const tp = item.tp || (item.signal === 'BUY' ? (entry * 1.03).toFixed(2) : item.signal === 'SELL' ? (entry * 0.97).toFixed(2) : '-');
+
+                return (
+                  <div
+                    key={index}
+                    onClick={() => setSelectedSymbol(item.symbol)}
+                    style={{
+                      backgroundColor: selectedSymbol === item.symbol ? '#334155' : '#0f172a',
+                      padding: '12px 15px',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      border: '1px solid #334155'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <h3 style={{ margin: 0, fontSize: '16px', color: '#f8fafc' }}>{item.symbol}</h3>
+                      <span
+                        style={{
+                          padding: '3px 8px',
+                          borderRadius: '4px',
+                          fontSize: '11px',
+                          fontWeight: 'bold',
+                          backgroundColor: item.signal === 'BUY' ? '#166534' : item.signal === 'SELL' ? '#991b1b' : '#334155',
+                          color: item.signal === 'BUY' ? '#4ade80' : item.signal === 'SELL' ? '#f87171' : '#94a3b8'
+                        }}
+                      >
+                        {item.signal}
+                      </span>
+                    </div>
+
+                    <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px' }}>
+                      Live Price: <strong style={{ color: '#f1f5f9' }}>${item.price}</strong> | RSI: <strong>{item.rsi}</strong>
+                    </div>
+
+                    {/* Entry / Target / StopLoss Badges */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '5px', fontSize: '11px', textAlign: 'center' }}>
+                      <div style={{ backgroundColor: '#1e293b', padding: '4px', borderRadius: '4px', border: '1px solid #334155' }}>
+                        <span style={{ color: '#94a3b8', display: 'block' }}>Entry</span>
+                        <strong style={{ color: '#38bdf8' }}>${entry}</strong>
+                      </div>
+                      <div style={{ backgroundColor: '#1e293b', padding: '4px', borderRadius: '4px', border: '1px solid #334155' }}>
+                        <span style={{ color: '#94a3b8', display: 'block' }}>Target (TP)</span>
+                        <strong style={{ color: '#4ade80' }}>${tp}</strong>
+                      </div>
+                      <div style={{ backgroundColor: '#1e293b', padding: '4px', borderRadius: '4px', border: '1px solid #334155' }}>
+                        <span style={{ color: '#94a3b8', display: 'block' }}>Stop Loss (SL)</span>
+                        <strong style={{ color: '#f87171' }}>${sl}</strong>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <span
-                      style={{
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        fontSize: '12px',
-                        fontWeight: 'bold',
-                        backgroundColor: item.signal === 'BUY' ? '#166534' : item.signal === 'SELL' ? '#991b1b' : '#334155',
-                        color: item.signal === 'BUY' ? '#4ade80' : item.signal === 'SELL' ? '#f87171' : '#94a3b8'
-                      }}
-                    >
-                      {item.signal}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>
