@@ -47,7 +47,7 @@ export default function Home() {
           <h2 style={{ fontSize: '18px', marginBottom: '15px', color: '#cbd5e1' }}>
             📊 Live Technical Chart ({selectedSymbol})
           </h2>
-          <div style={{ width: '100%', height: '500px' }}>
+          <div>
             <iframe
               title="TradingView Chart"
               src={"https://s.tradingview.com/widgetembed/?frameElementId=tradingview_1&symbol=" + chartSymbol + "&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC"}
