@@ -26,13 +26,13 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  const getChartSymbol = (sym) => {
+  const formatSymbol = (sym) => {
     if (!sym) return 'SOLUSDT';
     return sym.replace('-USD', 'USDT').replace('^', '');
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-5 font-sans" style={{ backgroundColor: '#0f172a', color: '#ffffff', minHeight: '100vh', padding: '20px' }}>
+    <div style={{ backgroundColor: '#0f172a', color: '#ffffff', minHeight: '100vh', padding: '20px', fontFamily: 'sans-serif' }}>
       <Head>
         <title>JIO AI TRADING | INSTITUTIONAL V2</title>
       </Head>
@@ -54,7 +54,7 @@ export default function Home() {
           <div style={{ width: '100%', height: '500px' }}>
             <iframe
               title="TradingView Chart"
-              src={https://s.tradingview.com/widgetembed/?frameElementId=tradingview_1&symbol=${getChartSymbol(selectedSymbol)}&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC}
+              src={https://s.tradingview.com/widgetembed/?frameElementId=tradingview_1&symbol=${formatSymbol(selectedSymbol)}&interval=5&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC}
               width="100%"
               height="500"
               frameBorder="0"
