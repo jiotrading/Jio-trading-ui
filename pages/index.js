@@ -9,7 +9,6 @@ export default function Home() {
     try {
       const res = await fetch('https://yogiaitrading-web.onrender.com/api/signals');
       const data = await res.json();
-      
       if (Array.isArray(data) && data.length > 0) {
         setSignals(data);
       } else if (data && Array.isArray(data.signals)) {
@@ -27,7 +26,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ backgroundColor: '#0f172a', color: '#fff', minHeight: '100vh', padding: '20px', fontFamily: 'sans-serif' }}>
+    <div style={{ backgroundColor: '#0f172a', color: '#ffffff', minHeight: '100vh', padding: '20px', fontFamily: 'sans-serif' }}>
       <Head>
         <title>JIO AI TRADING | INSTITUTIONAL V2</title>
       </Head>
