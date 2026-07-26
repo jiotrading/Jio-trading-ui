@@ -10,7 +10,6 @@ export default function Home() {
       const res = await fetch('https://yogiaitrading-web.onrender.com/api/signals');
       const data = await res.json();
       
-      // API response check (Handles direct array or wrapped object)
       if (Array.isArray(data) && data.length > 0) {
         setSignals(data);
       } else if (data && Array.isArray(data.signals)) {
@@ -43,7 +42,6 @@ export default function Home() {
       </header>
 
       <main style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
-        {/* TradingView Chart Section */}
         <section style={{ backgroundColor: '#1e293b', borderRadius: '10px', padding: '15px' }}>
           <h2 style={{ fontSize: '18px', marginBottom: '15px', color: '#cbd5e1' }}>
             📊 Live Technical Chart ({selectedSymbol})
@@ -54,7 +52,6 @@ export default function Home() {
           ></iframe>
         </section>
 
-        {/* AI Signals Section */}
         <section style={{ backgroundColor: '#1e293b', borderRadius: '10px', padding: '15px' }}>
           <h2 style={{ fontSize: '18px', marginBottom: '15px', color: '#cbd5e1' }}>
             🤖 AI SIGNAL ANALYTICS
